@@ -14,4 +14,5 @@ public interface BookService {
     public Book getBookById(int id);
     public List<Book>findByParam(String title,String description,String author, Integer page);
     public Long countBooks();
+    public Book editStatusBook(int id);
 }

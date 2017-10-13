@@ -38,20 +38,30 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
-    @Transactional
+    @Transactional(readOnly = true)
     public Book getBookById(int id) {
         return this.bookDao.getBookById(id);
     }
 
     @Override
-    @Transactional
+    @Transactional(readOnly = true)
     public List<Book> findByParam(String title, String description, String author, Integer page) {
         return this.bookDao.findByParam(title, description, author, page);
     }
 
     @Override
-    @Transactional
+    @Transactional(readOnly = true)
     public Long countBooks() {
         return this.bookDao.countBooks();
+    }
+
+    @Override
+    @Transactional
+    public Book editStatusBook(int id) {
+        Book book = this.bookDao.getBookById(id);
+        if (book.isWasRead())
+            book.setWasRead(false);
+        bookDao.updateBook(book);
+        return book;
     }
 }

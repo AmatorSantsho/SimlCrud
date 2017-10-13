@@ -9,7 +9,90 @@
     <title>Книжная полка</title>
     <link href="<c:url value="/resources/CSS/style.css" />" type="text/css" rel="stylesheet"/>
 </head>
-<br/>
+<h1>Найти книгу</h1>
+<c:url var="findAction" value="/books/find"/>
+<form action="${findAction}" method="post">
+    <table>
+        <tr>
+            <td>
+                <p1>Название книги</p1>
+            </td>
+            <td>
+                <input type="text" name="title" size="100" maxlength="100"/>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <p1>Описание книги</p1>
+            </td>
+            <td>
+                <input type="text" name="" size="100" maxlength="100"/>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <p1> Автор книги</p1>
+            </td>
+            <td>
+                <input type="text" name="author" size="100" maxlength="100"/>
+            </td>
+        </tr>
+        <td>
+            <input type="submit"
+                   value="Найти книгу"/>
+        </td>
+        </tr>
+    </table>
+</form>
+<c:if test="${findResult==true}">
+    <a href="/books"> вернуться на Главную страницу</a>
+</c:if>
+<h1>Список книг</h1>
+</br>
+<c:if test="${countBooks==0}">
+    <p class="big">По вашему запросу ничего не найдено</p>
+</c:if>
+<c:if test="${!empty listBooks}">
+    <table class="tg">
+        <tr>
+            <th width="80">ID книги</th>
+            <th width="120">Название книги</th>
+            <th width="180">Описание книги</th>
+            <th width="120">Автор книги</th>
+            <th width="80">ISBN</th>
+            <th width="80">Год издания</th>
+            <th width="120">Книга прочитана</th>
+            <th width="60">Edit</th>
+            <th width="60">Delete</th>
+            <th width="60">Read</th>
+        </tr>
+        <c:forEach items="${listBooks}" var="book">
+            <tr>
+                <td>${book.id}</td>
+                <td>${book.title}</td>
+                <td>${book.description}</td>
+                <td>${book.author}</td>
+                <td>${book.isbn}</td>
+                <td>${book.printYear}</td>
+                <td><c:if test="${book.wasRead==true}">
+                    <c:out value="Да"/>
+                </c:if>
+                    <c:if test="${book.wasRead==false}">
+                        <c:out value="Нет"/>
+                    </c:if>
+                    <br>
+                    <c:if test="${book.wasRead==false}">
+                        <a href="<c:url value='/edit/status/${page}/${book.id}'/>" class="smoll">Изменить на "Да"?</a>
+                    </c:if>
+                </td>
+                <td><a href="<c:url value='/edit/${page}/${book.id}'/>">Edit</a></td>
+                <td><a href="<c:url value='/remove/${page}/${book.id}'/>">Delete</a></td>
+                <td><a href="/bookread/${book.id}">Read</a></td>
+            </tr>
+        </c:forEach>
+    </table>
+</c:if>
+
 <h1>Добавить/Редактировать книгу</h1>
 <form:form action="/books/add/${page}" commandName="book">
     <table>
@@ -106,123 +189,35 @@
         </tr>
     </table>
 </form:form>
-<br/>
-<h1>Найти книгу</h1>
-<c:url var="findAction" value="/books/find"/>
-
-<form action="${findAction}" method="post">
-    <table>
-        <tr>
-            <td>
-                <p1>Название книги</p1>
-            </td>
-            <td>
-                <input type="text" name="title" size="100" maxlength="100"/>
-            </td>
-        </tr>
-        <tr>
-            <td>
-                <p1>Описание книги</p1>
-            </td>
-            <td>
-                <input type="text" name="description" size="100" maxlength="100"/>
-            </td>
-        </tr>
-        <tr>
-            <td>
-                <p1> Автор книги</p1>
-            </td>
-            <td>
-                <input type="text" name="author" size="100" maxlength="100"/>
-            </td>
-        </tr>
-        <td>
-            <input type="submit"
-                   value="Найти книгу"/>
-        </td>
-        </tr>
-    </table>
-</form>
-</br>
-<c:if test="${findResult==true}">
-    <a href="/books"> вернуться на Главную страницу</a>
-</c:if>
-<h1>Список книг</h1>
-</br>
-<c:if test="${countBooks==0}">
-    <p class="big">По вашему запросу ничего не найдено</p>
-</c:if>
-<c:if test="${!empty listBooks}">
-    <table class="tg">
-        <tr>
-            <th width="80">ID книги</th>
-            <th width="120">Название книги</th>
-            <th width="180">Описание книги</th>
-            <th width="120">Автор книги</th>
-            <th width="80">ISBN</th>
-            <th width="80">Год издания</th>
-            <th width="120">Книга прочитана</th>
-            <th width="60">Edit</th>
-            <th width="60">Delete</th>
-            <th width="60">Read</th>
-        </tr>
-        <c:forEach items="${listBooks}" var="book">
-            <tr>
-                <td>${book.id}</td>
-                <td>${book.title}</td>
-                <td>${book.description}</td>
-                <td>${book.author}</td>
-                <td>${book.isbn}</td>
-                <td>${book.printYear}</td>
-                <td><c:if test="${book.wasRead==true}">
-                    <c:out value="Да"/>
-                </c:if>
-                    <c:if test="${book.wasRead==false}">
-                        <c:out value="Нет"/>
-                    </c:if>
-                    <br>
-                    <c:if test="${book.wasRead==false}">
-                        <a href="<c:url value='/edit/status/${page}/${book.id}'/>" class="smoll">Изменить на "Да"?</a>
-                    </c:if>
-                </td>
-                <td><a href="<c:url value='/edit/${page}/${book.id}'/>">Edit</a></td>
-                <td><a href="<c:url value='/remove/${page}/${book.id}'/>">Delete</a></td>
-                <td><a href="/bookread/${book.id}">Read</a></td>
-            </tr>
-        </c:forEach>
-    </table>
-</c:if>
-<br>
-
 <c:if test="${findResult!=true}">
-<div class="pag">
-    <c:url value="/books" var="previous">
-        <c:param name="page" value="${page-1}"/>
-    </c:url>
-    <c:if test="${page>1}">
-        <a href="<c:out value="${previous}"  />">Предыдущая</a>
-    </c:if>
-    <c:forEach var="i" begin="1" end="${countPages}">
-        <c:choose>
-            <c:when test="${page == i}">
- <span>${i}</span>
-            </c:when>
-            <c:otherwise>
-                <c:url value="/books" var="currenti">
-                    <c:param name="page" value="${i}"/>
-                </c:url>
- <a href='<c:out value="${currenti}" />'>${i}</a>
-            </c:otherwise>
-        </c:choose>
-    </c:forEach>
-    <c:url value="/books" var="next">
-        <c:param name="page" value="${page + 1}"/>
-    </c:url>
-    <c:if test="${page + 1 <= countPages}">
-        <a href='<c:out value="${next}" />'>Следущая</a>
-    </c:if>
-        </div>
+    <div class="pag">
+        <c:url value="/books" var="previous">
+            <c:param name="page" value="${page-1}"/>
+        </c:url>
+        <c:if test="${page>1}">
+            <a href="<c:out value="${previous}"  />">Предыдущая</a>
         </c:if>
+        <c:forEach var="i" begin="1" end="${countPages}">
+            <c:choose>
+                <c:when test="${page == i}">
+                    <span>${i}</span>
+                </c:when>
+                <c:otherwise>
+                    <c:url value="/books" var="currenti">
+                        <c:param name="page" value="${i}"/>
+                    </c:url>
+                    <a href='<c:out value="${currenti}" />'>${i}</a>
+                </c:otherwise>
+            </c:choose>
+        </c:forEach>
+        <c:url value="/books" var="next">
+            <c:param name="page" value="${page + 1}"/>
+        </c:url>
+        <c:if test="${page + 1 <= countPages}">
+            <a href='<c:out value="${next}" />'>Следущая</a>
+        </c:if>
+    </div>
+</c:if>
 
 </body>
 </html>

@@ -67,10 +67,7 @@ public class BookController {
     }
     @RequestMapping(value = "edit/{page}/{id}")
     public String editBook(@PathVariable("page") int page, @PathVariable("id") int id, Model model) {
-        Book book = this.bookService.getBookById(id);
-        if (book.isWasRead())
-            book.setWasRead(false);
-        this.bookService.updateBook(book);
+        Book book = this.bookService.editStatusBook(id);
         model.addAttribute("book", book);
         model.addAttribute("listBooks", this.bookService.findByParam(null, null, null, new Integer(page)));
         return "books";

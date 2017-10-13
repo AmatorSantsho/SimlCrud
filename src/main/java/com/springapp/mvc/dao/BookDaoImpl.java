@@ -53,38 +53,42 @@ public class BookDaoImpl implements BookDao {
 
 
     @Override
-    public List<Book> findByParam(String t, String d, String a, Integer page) {
+    public List<Book> findByParam(String title, String description, String author, Integer page) {
         Session session = this.sessionFactory.getCurrentSession();
-        Criteria criteria=session.createCriteria(Book.class);
+        Criteria criteria = session.createCriteria(Book.class);
 
-        if (page == null) {
-            if (!t.equals("")) {
-               criteria.add(Restrictions.like("title",t));
-                return criteria.list();
-            }else if (!d.equals("")) {
-                criteria.add(Restrictions.like("description",d));
-                return criteria.list();
-
-            } else if (!a.equals("")) {
-                criteria.add(Restrictions.like("author",a));
-                return criteria.list();
-            } else {
- return criteria.list();
-
-            }
-        } else {
-           criteria.setFirstResult((page-1)*10);
-            criteria.setMaxResults(10);
-            return criteria.list();
+        if (title != null && !"".equals(title.trim())) {
+            criteria.add(Restrictions.like("title", likeValue(title)));
         }
 
+        if (description != null && !"".equals(description.trim())) {
+            criteria.add(Restrictions.like("description", likeValue(description)));
+        }
+
+        if (author != null && !"".equals(author.trim())) {
+            criteria.add(Restrictions.like("author", likeValue(author)));
+        }
+
+        if (page == null) {
+            page = 1;
+        }
+
+        criteria.setFirstResult((page - 1) * 10);
+        criteria.setMaxResults(10);
+        return criteria.list();
+
+
+    }
+
+    private String likeValue(String value) {
+        return "%" + value + "%";
     }
 
     @Override
     public Long countBooks() {
         Session session = this.sessionFactory.getCurrentSession();
 
-       Long result=  ((Long) session.createQuery("select count(*) from Book").uniqueResult());
+        Long result=  ((Long) session.createQuery("select count(*) from Book").uniqueResult());
 
         return result;
     }
